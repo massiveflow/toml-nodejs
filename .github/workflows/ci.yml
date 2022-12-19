@@ -14,7 +14,8 @@ permissions:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    - name: npm test
+    runs-on: [windows-2022, ubuntu-latest]
 
     steps:
       - uses: actions/checkout@v3
@@ -31,3 +32,22 @@ jobs:
       - run: npm install --ignore-scripts
       - run: npm run lint
       - run: npm run build
+
+    - name: yarn test
+    runs-on: [windows-2022, ubuntu-latest]
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16.x.x'
+
+      - uses: actions/cache@v3
+        with:
+          path: ~/.yarn
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - run: yarn --ignore-scripts
+      - run: yarn lint
+      - run: yarn build
